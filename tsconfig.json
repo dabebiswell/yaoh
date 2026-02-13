@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "inlineSourceMap": true,
+        "inlineSources": true,
+        "module": "ESNext",
+        "target": "ES2018",
+        "allowSyntheticDefaultImports": true,
+        "importHelpers": true,
+        "noImplicitAny": true,
+        "moduleResolution": "node",
+        "lib": [
+            "dom",
+            "es5",
+            "scripthost",
+            "es2018"
+        ]
+    },
+    "include": [
+        "**/*.ts"
+    ]
+}

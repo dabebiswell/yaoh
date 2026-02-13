@@ -1,0 +1,25 @@
+{
+  "name": "yaoh",
+  "version": "1.0.0",
+  "description": "A GitHub-style heatmap for your Obsidian notes",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "node esbuild.config.mjs production"
+  },
+  "keywords": [
+    "obsidian",
+    "obsidian-plugin",
+    "heatmap",
+    "yaoh"
+  ],
+  "author": "Dabe Biswell",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^16.11.6",
+    "esbuild": "0.17.18",
+    "obsidian": "latest",
+    "tslib": "2.5.0",
+    "typescript": "5.0.4"
+  }
+}

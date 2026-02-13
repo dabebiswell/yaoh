@@ -1,0 +1,9 @@
+{
+    "id": "yaoh",
+    "name": "Yet Another Obsidian Heatmap",
+    "version": "1.0.0",
+    "minAppVersion": "1.11",
+    "description": "Visualizes your writing activity in a GitHub-style heatmap.",
+    "author": "Dabe Biswell",
+    "isDesktopOnly": false
+}

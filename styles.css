@@ -1,0 +1,159 @@
+/* Obsidian Heatmap Plugin Styles */
+
+.heatmap-container {
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.heatmap-grid {
+    display: flex;
+    flex-direction: row;
+    /* Weeks go left to right */
+    gap: 2px;
+    flex-wrap: wrap;
+    /* Allow wrapping for narrow sidebars */
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.heatmap-week {
+    display: flex;
+    flex-direction: column;
+    /* Days go top to bottom */
+    gap: 2px;
+    flex-shrink: 0;
+    /* Prevent squishing of weeks */
+}
+
+.heatmap-cell {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    background-color: var(--background-modifier-border);
+    /* Default empty color */
+    /* cursor is set in JS */
+    transition: all 0.1s ease-in-out;
+}
+
+.heatmap-cell:hover {
+    border: 1px solid var(--text-normal);
+    transform: scale(1.2);
+}
+
+/* Intensity Levels - Using CSS Variables for Theme Support */
+/* We use opacity or mix-blend-mode to derive shades from the accent color */
+
+.heatmap-cell.intensity-0 {
+    background-color: var(--background-modifier-border);
+    opacity: 0.3;
+}
+
+/* Level 1: Low Activity */
+.heatmap-cell.intensity-1 {
+    background-color: var(--interactive-accent);
+    opacity: 0.25;
+}
+
+/* Level 2: Moderate Activity */
+.heatmap-cell.intensity-2 {
+    background-color: var(--interactive-accent);
+    opacity: 0.50;
+}
+
+/* Level 3: High Activity */
+.heatmap-cell.intensity-3 {
+    background-color: var(--interactive-accent);
+    opacity: 0.75;
+}
+
+/* Level 4: Extreme Activity */
+.heatmap-cell.intensity-4 {
+    background-color: var(--interactive-accent);
+    opacity: 1.0;
+}
+
+/* Loading State */
+.heatmap-loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    gap: 10px;
+    color: var(--text-muted);
+}
+
+.heatmap-spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--background-modifier-border);
+    border-top: 3px solid var(--interactive-accent);
+    border-radius: 50%;
+    animation: heatmap-spin 1s linear infinite;
+}
+
+@keyframes heatmap-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Axis Labels */
+.heatmap-axis-y {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-right: 4px;
+    flex-shrink: 0;
+    /* Don't shrink labels */
+}
+
+.heatmap-day-label {
+    width: 20px;
+    /* Short width for Mon/Wed/Fri */
+    height: 10px;
+    font-size: 9px;
+    line-height: 10px;
+    color: var(--text-muted);
+    text-align: right;
+}
+
+.heatmap-month-label {
+    height: 12px;
+    /* A bit taller than cells */
+    font-size: 9px;
+    line-height: 12px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+    overflow: visible;
+    /* Allow text to spill over */
+    white-space: nowrap;
+    width: 10px;
+    /* Force width to match week column */
+}
+
+.heatmap-month-label.spacer {
+    /* Used in axis-y to align with month labels */
+    width: 20px;
+    /* Match axis width */
+}
+
+.heatmap-grid {
+    display: flex;
+    flex-direction: column;
+    /* Stacking rows vertically */
+    gap: 10px;
+    /* Gap between wrapped rows */
+    width: 100%;
+}
+
+.heatmap-row {
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+    /* Separate weeks horizontally */
+}
