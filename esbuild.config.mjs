@@ -28,7 +28,12 @@ try {
 }
 
 // Define Vault Path
-const VAULT_PLUGIN_DIR = "O:\\primary\\.obsidian\\plugins\\yaoh";
+if (!process.env.OBSIDIAN_VAULT) {
+    console.error("OBSIDIAN_VAULT environment variable is not set.");
+    process.exit(1);
+}
+
+const VAULT_PLUGIN_DIR = path.join(process.env.OBSIDIAN_VAULT, ".obsidian", "plugins", "yaoh");
 
 function copyToVault() {
     if (!fs.existsSync(VAULT_PLUGIN_DIR)) {
