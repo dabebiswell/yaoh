@@ -49,6 +49,10 @@ Go to **Settings > YAOH Settings** to configure:
 
 -   **`npm run build`**: production build.
 
+### Environment Setup
+
+You need to set the `OBSIDIAN_VAULT` environment variable to the root path of your Obsidian vault. The plugin will be built and copied to `$OBSIDIAN_VAULT/.obsidian/plugins/yaoh`.
+
 ## License
 
 See [LICENSE.md](LICENSE.md).
