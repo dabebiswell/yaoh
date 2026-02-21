@@ -50,27 +50,28 @@
 
 /* Level 1: Low Activity */
 .heatmap-cell.intensity-1 {
-    background-color: var(--interactive-accent);
+    background-color: var(--heatmap-color, var(--interactive-accent));
     opacity: 0.25;
 }
 
 /* Level 2: Moderate Activity */
 .heatmap-cell.intensity-2 {
-    background-color: var(--interactive-accent);
+    background-color: var(--heatmap-color, var(--interactive-accent));
     opacity: 0.50;
 }
 
 /* Level 3: High Activity */
 .heatmap-cell.intensity-3 {
-    background-color: var(--interactive-accent);
+    background-color: var(--heatmap-color, var(--interactive-accent));
     opacity: 0.75;
 }
 
 /* Level 4: Extreme Activity */
 .heatmap-cell.intensity-4 {
-    background-color: var(--interactive-accent);
+    background-color: var(--heatmap-color, var(--interactive-accent));
     opacity: 1.0;
 }
+
 
 /* Loading State */
 .heatmap-loading-container {

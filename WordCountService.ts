@@ -28,8 +28,11 @@ export class WordCountService {
     }
 
     countWords(text: string): number {
+        // Strip frontmatter
+        const withoutFrontmatter = text.replace(/^---\n[\s\S]*?\n---\n/, '');
+        // Strip codeblocks
+        const withoutCodeBlocks = withoutFrontmatter.replace(/```[\s\S]*?```/g, '');
         // Simple regex for word count. 
-        // Remove code blocks and frontmatter could be an improvement, but starting simple.
-        return text.split(/\s+/).filter(w => w.length > 0).length;
+        return withoutCodeBlocks.split(/\s+/).filter(w => w.length > 0).length;
     }
 }

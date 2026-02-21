@@ -8,13 +8,15 @@ interface HeatmapSettings {
     showDayLabels: boolean;
     showMonthLabels: boolean;
     dailyNoteOnClick: boolean;
+    customColor: string;
 }
 
 const DEFAULT_SETTINGS: HeatmapSettings = {
     colorThresholds: [100, 500, 1000, 2000],
     showDayLabels: false,
     showMonthLabels: false,
-    dailyNoteOnClick: false
+    dailyNoteOnClick: false,
+    customColor: ''
 }
 
 export default class HeatmapPlugin extends Plugin {
@@ -135,6 +137,18 @@ class HeatmapSettingTab extends PluginSettingTab {
                 .setValue(this.plugin.settings.showMonthLabels)
                 .onChange(async (value) => {
                     this.plugin.settings.showMonthLabels = value;
+                    await this.plugin.saveSettings();
+                    this.plugin.refreshViews();
+                }));
+
+        new Setting(containerEl)
+            .setName('Custom Base Color')
+            .setDesc('Leave blank to use your theme\'s accent color, or enter a valid CSS color (e.g., #40c463, rgb(0, 200, 0), red) to customize the gradient base.')
+            .addText(text => text
+                .setPlaceholder('Theme accent')
+                .setValue(this.plugin.settings.customColor)
+                .onChange(async (value) => {
+                    this.plugin.settings.customColor = value;
                     await this.plugin.saveSettings();
                     this.plugin.refreshViews();
                 }));

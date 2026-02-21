@@ -96,6 +96,12 @@ export class HeatmapView extends ItemView {
 
         const gridEl = container.createDiv({ cls: 'heatmap-grid' });
 
+        if (this.plugin.settings.customColor) {
+            gridEl.style.setProperty('--heatmap-color', this.plugin.settings.customColor);
+        } else {
+            gridEl.style.removeProperty('--heatmap-color');
+        }
+
         // Rolling Year Calculation
         const today = moment();
         const oneYearAgo = moment().subtract(1, 'year');
