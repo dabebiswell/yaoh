@@ -9,6 +9,7 @@ interface HeatmapSettings {
     showMonthLabels: boolean;
     dailyNoteOnClick: boolean;
     customColor: string;
+    excludedFolders: string;
 }
 
 const DEFAULT_SETTINGS: HeatmapSettings = {
@@ -16,7 +17,8 @@ const DEFAULT_SETTINGS: HeatmapSettings = {
     showDayLabels: false,
     showMonthLabels: false,
     dailyNoteOnClick: false,
-    customColor: ''
+    customColor: '',
+    excludedFolders: ''
 }
 
 export default class HeatmapPlugin extends Plugin {
@@ -26,7 +28,7 @@ export default class HeatmapPlugin extends Plugin {
     async onload() {
         await this.loadSettings();
 
-        this.service = new WordCountService(this.app);
+        this.service = new WordCountService(this.app, this);
 
         // Register the View
         this.registerView(
@@ -149,6 +151,18 @@ class HeatmapSettingTab extends PluginSettingTab {
                 .setValue(this.plugin.settings.customColor)
                 .onChange(async (value) => {
                     this.plugin.settings.customColor = value;
+                    await this.plugin.saveSettings();
+                    this.plugin.refreshViews();
+                }));
+
+        new Setting(containerEl)
+            .setName('Excluded Folders')
+            .setDesc('Comma-separated list of folders to exclude from word counting (e.g. Templates, Assets/Images).')
+            .addText(text => text
+                .setPlaceholder('Templates, Assets')
+                .setValue(this.plugin.settings.excludedFolders)
+                .onChange(async (value) => {
+                    this.plugin.settings.excludedFolders = value;
                     await this.plugin.saveSettings();
                     this.plugin.refreshViews();
                 }));

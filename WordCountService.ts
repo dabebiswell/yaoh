@@ -2,18 +2,31 @@ import { App, TFile } from 'obsidian';
 // @ts-ignore
 import moment from 'moment';
 
+import HeatmapPlugin from './main';
+
 export class WordCountService {
     app: App;
+    plugin: HeatmapPlugin;
 
-    constructor(app: App) {
+    constructor(app: App, plugin: HeatmapPlugin) {
         this.app = app;
+        this.plugin = plugin;
     }
 
     async getWordCounts(): Promise<Map<string, number>> {
         const files = this.app.vault.getMarkdownFiles();
         const dailyCounts = new Map<string, number>();
 
+        const excludedList = this.plugin.settings.excludedFolders
+            .split(',')
+            .map(s => s.trim())
+            .filter(s => s.length > 0);
+
         for (const file of files) {
+            // Check if file is in excluded folder
+            const isExcluded = excludedList.some(folder => file.path === folder || file.path.startsWith(folder + '/'));
+            if (isExcluded) continue;
+
             const content = await this.app.vault.read(file);
             const wordCount = this.countWords(content);
 

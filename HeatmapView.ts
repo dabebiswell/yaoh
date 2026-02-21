@@ -1,4 +1,4 @@
-import { ItemView, WorkspaceLeaf, App, Notice, TFile } from 'obsidian';
+import { ItemView, WorkspaceLeaf, App, Notice, TFile, setTooltip, setIcon, Menu } from 'obsidian';
 import { WordCountService } from './WordCountService';
 import HeatmapPlugin from './main';
 // @ts-ignore
@@ -12,6 +12,7 @@ export class HeatmapView extends ItemView {
 
     renderId: number = 0;
     cachedData: Map<string, number> | null = null;
+    selectedYear: number | 'rolling' = 'rolling';
 
     constructor(leaf: WorkspaceLeaf, plugin: HeatmapPlugin, service: WordCountService) {
         super(leaf);
@@ -74,7 +75,58 @@ export class HeatmapView extends ItemView {
         const container = this.containerEl.children[1];
         container.empty();
 
-        // Render Heatmap
+        // Render Header Form
+        const headerEl = container.createDiv({ cls: 'heatmap-header' });
+        headerEl.style.display = 'flex';
+        headerEl.style.justifyContent = 'flex-end';
+        headerEl.style.marginBottom = '10px';
+        headerEl.style.paddingRight = '10px';
+
+        // populate options
+        let availableYears = new Set<number>();
+        this.cachedData.forEach((_, dateStr) => {
+            availableYears.add(moment(dateStr).year());
+        });
+
+        let sortedYears = Array.from(availableYears).sort((a, b) => b - a);
+        // Always include current year even if empty
+        const currentYear = moment().year();
+        if (!sortedYears.includes(currentYear)) {
+            sortedYears.unshift(currentYear);
+        }
+
+        const years = ['rolling', ...sortedYears];
+
+        // Build the icon trigger
+        const iconEl = headerEl.createDiv({
+            cls: 'clickable-icon heatmap-year-icon',
+            attr: { 'aria-label': 'Select Year' }
+        });
+        setIcon(iconEl, 'calendar-days'); // Fun and thematic
+
+        iconEl.addEventListener('click', (event) => {
+            const menu = new Menu();
+
+            years.forEach(year => {
+                const isSelected = String(year) === String(this.selectedYear);
+                const title = year === 'rolling' ? 'Rolling Year' : String(year);
+
+                menu.addItem((item) => {
+                    item.setTitle(title)
+                        .setChecked(isSelected)
+                        .onClick(() => {
+                            this.selectedYear = year === 'rolling' ? 'rolling' : parseInt(String(year));
+                            this.regenerateHeatmap();
+                        });
+                });
+            });
+
+            // Show menu below the icon
+            const rect = iconEl.getBoundingClientRect();
+            menu.showAtPosition({ x: rect.left, y: rect.bottom });
+        });
+
+        // Render Heatmap Grid
         this.renderGrid(container, this.cachedData);
     }
 
@@ -102,12 +154,24 @@ export class HeatmapView extends ItemView {
             gridEl.style.removeProperty('--heatmap-color');
         }
 
-        // Rolling Year Calculation
-        const today = moment();
-        const oneYearAgo = moment().subtract(1, 'year');
+        // Rolling / Year Calculation
+        let today: moment.Moment;
+        let startDate: moment.Moment;
+
+        if (this.selectedYear === 'rolling') {
+            today = moment();
+            startDate = moment().subtract(1, 'year');
+        } else {
+            today = moment().year(this.selectedYear).endOf('year');
+            const actualToday = moment();
+            if (today.isAfter(actualToday)) {
+                today = actualToday;
+            }
+            startDate = moment().year(this.selectedYear).startOf('year');
+        }
 
         // Align to previous Sunday
-        let currentLoopDate = moment(oneYearAgo).startOf('week');
+        let currentLoopDate = moment(startDate).startOf('week');
         let lastMonth = "";
 
         // Collect all weeks first to make chunking easier
@@ -171,10 +235,11 @@ export class HeatmapView extends ItemView {
                     const cell = weekEl.createDiv({
                         cls: `heatmap-cell intensity-${intensity}`,
                         attr: {
-                            'aria-label': `${dateStr}: ${counts} words`,
                             'data-date': dateStr
                         }
                     });
+
+                    setTooltip(cell, `${dateStr}: ${counts} words`);
 
                     // --- Click Interaction ---
                     if (this.plugin.settings.dailyNoteOnClick) {
