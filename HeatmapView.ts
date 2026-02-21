@@ -56,7 +56,7 @@ export class HeatmapView extends ItemView {
         loadingContainer.createDiv({ text: "Updating heatmap..." });
 
         // Fetch data
-        const data = await this.service.getWordCounts();
+        const data = await this.service.getCounts();
 
         // Check for stale request
         if (this.renderId !== currentId) {
@@ -239,7 +239,8 @@ export class HeatmapView extends ItemView {
                         }
                     });
 
-                    setTooltip(cell, `${dateStr}: ${counts} words`);
+                    const unit = this.plugin.settings.trackingMode === 'tasks' ? 'tasks' : 'words';
+                    setTooltip(cell, `${dateStr}: ${counts} ${unit}`);
 
                     // --- Click Interaction ---
                     if (this.plugin.settings.dailyNoteOnClick) {

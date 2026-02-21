@@ -13,7 +13,7 @@ export class WordCountService {
         this.plugin = plugin;
     }
 
-    async getWordCounts(): Promise<Map<string, number>> {
+    async getCounts(): Promise<Map<string, number>> {
         const files = this.app.vault.getMarkdownFiles();
         const dailyCounts = new Map<string, number>();
 
@@ -28,13 +28,18 @@ export class WordCountService {
             if (isExcluded) continue;
 
             const content = await this.app.vault.read(file);
-            const wordCount = this.countWords(content);
+            let count = 0;
+            if (this.plugin.settings.trackingMode === 'tasks') {
+                count = this.countTasks(content);
+            } else {
+                count = this.countWords(content);
+            }
 
             // Use modification time as the "date"
             const date = moment(file.stat.mtime).format('YYYY-MM-DD');
 
             const currentCount = dailyCounts.get(date) || 0;
-            dailyCounts.set(date, currentCount + wordCount);
+            dailyCounts.set(date, currentCount + count);
         }
 
         return dailyCounts;
@@ -47,5 +52,11 @@ export class WordCountService {
         const withoutCodeBlocks = withoutFrontmatter.replace(/```[\s\S]*?```/g, '');
         // Simple regex for word count. 
         return withoutCodeBlocks.split(/\s+/).filter(w => w.length > 0).length;
+    }
+
+    countTasks(text: string): number {
+        const taskRegex = /^\s*-\s*\[x\]/gmi;
+        const matches = text.match(taskRegex);
+        return matches ? matches.length : 0;
     }
 }

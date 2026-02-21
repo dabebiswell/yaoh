@@ -10,6 +10,7 @@ interface HeatmapSettings {
     dailyNoteOnClick: boolean;
     customColor: string;
     excludedFolders: string;
+    trackingMode: 'words' | 'tasks';
 }
 
 const DEFAULT_SETTINGS: HeatmapSettings = {
@@ -18,7 +19,8 @@ const DEFAULT_SETTINGS: HeatmapSettings = {
     showMonthLabels: false,
     dailyNoteOnClick: false,
     customColor: '',
-    excludedFolders: ''
+    excludedFolders: '',
+    trackingMode: 'words'
 }
 
 export default class HeatmapPlugin extends Plugin {
@@ -89,7 +91,7 @@ export default class HeatmapPlugin extends Plugin {
     refreshViews() {
         this.app.workspace.getLeavesOfType(HEATMAP_VIEW_TYPE).forEach(leaf => {
             if (leaf.view instanceof HeatmapView) {
-                leaf.view.regenerateHeatmap();
+                leaf.view.loadData();
             }
         });
     }
@@ -109,6 +111,19 @@ class HeatmapSettingTab extends PluginSettingTab {
         containerEl.empty();
 
         containerEl.createEl('h2', { text: 'YAOH Settings' });
+
+        new Setting(containerEl)
+            .setName('Tracking Mode')
+            .setDesc('Choose whether to track written words or completed tasks (- [x]).')
+            .addDropdown(drop => drop
+                .addOption('words', 'Word Count')
+                .addOption('tasks', 'Completed Tasks')
+                .setValue(this.plugin.settings.trackingMode)
+                .onChange(async (value: 'words' | 'tasks') => {
+                    this.plugin.settings.trackingMode = value;
+                    await this.plugin.saveSettings();
+                    this.plugin.refreshViews();
+                }));
 
         new Setting(containerEl)
             .setName('Open Daily Note on Click')
