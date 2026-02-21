@@ -4,11 +4,13 @@ A minimalist GitHub-style activity heatmap for your Obsidian vault.
 
 ## Features
 
--   **Activity Visualization**: Shows a rolling 365-day heatmap of your activity.
+-   **Activity Visualization**: Shows a heatmap of your activity. Dynamically filter by historical calendar years or rolling 365 days using the calendar icon.
 -   **Data Source**: Tracks word counts based on the 'Last Modified' date of your markdown files.
+-   **Task Tracking Mode**: Track your daily completed tasks (`- [x]`) instead of words per day.
+-   **Custom Exclusions**: Skip tracking for files inside specified folders like Templates or Assets to keep counts accurate.
 -   **Dynamic Update**: Automatically refreshes when you write or change settings.
--   **Theme Support**: Seamlessly integrates with your Obsidian theme (light/dark mode).
--   **Configurable**: Customize the word count thresholds for the 4 intensity levels.
+-   **Theme Support**: Seamlessly integrates with your Obsidian theme and native tooltips.
+-   **Configurable**: Customize the tracking thresholds for the 4 intensity levels, and override the theme accent with custom CSS colors.
 
 ## Installation
 
@@ -40,7 +42,10 @@ A minimalist GitHub-style activity heatmap for your Obsidian vault.
 
 Go to **Settings > YAOH Settings** to configure:
 
--   **Level 1-4 Thresholds**: Set the number of words required to trigger each color intensity. The heatmap updates instantly as you change these values.
+-   **Tracking Mode**: Toggle between reading written word counts or completed tasks (`- [x]`).
+-   **Excluded Folders**: Comma-separated list of folders for the service to ignore (e.g., `Templates, Assets`).
+-   **Level 1-4 Thresholds**: Set the number of words/tasks required to trigger each color intensity. The heatmap updates instantly as you change these values.
+-   **Custom Base Color**: Override default CSS colors for the heatmap base gradient (leave blank to use your theme's accent color).
 -   **Open Daily Note on Click**: Toggle to open the Daily Note for a given grid date.
 -   **Show Day Labels**: Toggle to show Monday, Wednesday, and Friday labels on the left axis.
 -   **Show Month Labels**: Toggle to show Month names along the top of the heatmap.
