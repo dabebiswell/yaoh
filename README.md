@@ -2,6 +2,9 @@
 
 A minimalist GitHub-style activity heatmap for your Obsidian vault. 
 
+![Light](assets/demo_light.png)
+![Dark](assets/demo_dark.png)
+
 ## Features
 
 -   **Activity Visualization**: Shows a heatmap of your activity. Dynamically filter by historical calendar years or rolling 365 days using the calendar icon.
